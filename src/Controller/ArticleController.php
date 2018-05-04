@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\Service\MarkdownHelper;
+//use App\Service\SlackClient;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,6 +13,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ArticleController extends AbstractController
 {
+
+    private $isDebug;
+
+    public function __construct(bool $isDebug)
+    {
+
+        $this->isDebug = $isDebug;
+    }
+
     /**
      * @Route("/", name="app_homepage")
      * @return Response
@@ -25,7 +35,13 @@ class ArticleController extends AbstractController
      * @param $slug
      * @return Response
      */
-    public function show(string $slug, MarkdownHelper $markdownHelper){
+    public function show(string $slug, MarkdownHelper $markdownHelper /*, SlackClient $slack*/){
+
+
+        // Slack Integration!
+        /*if($slug == 'khaaaaaan'){
+            $slack->sendMessage('Khan', 'Hi There!');
+        }*/
 
         $comments = [
             'Curabitur eu venenatis massa. Integer at orci non nisi imperdiet feugiat.',
