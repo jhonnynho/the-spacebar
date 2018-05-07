@@ -8,7 +8,6 @@
 
 namespace App\Service;
 
-
 use Michelf\MarkdownInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
@@ -41,8 +40,6 @@ class MarkdownHelper
         if($this->isDebug){
             return $this->markdown->transform($source);
         }
-
-        dump($this->cache);die();
 
         $item = $this->cache->getItem('markdown_'.md5($source));
 

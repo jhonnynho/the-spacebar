@@ -38,6 +38,9 @@
             "ref": "70062abc2cd58794d2a90274502f81b55cd9951b"
         }
     },
+    "ezyang/htmlpurifier": {
+        "version": "dev-master"
+    },
     "guzzlehttp/guzzle": {
         "version": "6.3.3"
     },
