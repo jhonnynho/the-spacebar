@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -83,5 +84,38 @@ EOF
         $article = $repository->findOneBy(['slug' => $slug]);
 
         return $article;
+    }
+
+    /**
+     * @return Article[]
+     */
+    public function showAll() {
+        $repository = $this->em->getRepository(Article::class);
+        $article = $repository->findby(
+            [],
+            ['publishedAt' => 'DESC']
+        );
+
+        return $article;
+    }
+
+    /**
+     * @return Article[]
+     */
+    public function findAllPublishedOrderedByNewest(){
+        return $this->addIsPublishedQueryBuilder()
+            ->andWhere('a.publishedAt IS NOT NULL')
+            ->orderBy('a.publishedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    private function addIsPublishedQueryBuilder(QueryBuilder $qb = null){
+        return $this->getOrCreateQueryBuilder($qb)
+            ->andWhere('a.publishedAt IS NOT NULL');
+    }
+
+    private function getOrCreateQueryBuilder(QueryBuilder $qb = null){
+        return $qb ?: $this->createQueryBuilder('a');
     }
 }

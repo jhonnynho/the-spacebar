@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Article;
 use App\Repository\ArticleRepository;
 use App\Service\MarkdownHelper;
 use App\Service\SlackClient;
@@ -28,8 +29,13 @@ class ArticleController extends AbstractController
      * @Route("/", name="app_homepage")
      * @return Response
      */
-    public function homepage(){
-        return $this->render('article/homepage.html.twig');
+    public function homepage(ArticleRepository $articleRepository){
+
+        $articles = $articleRepository->showAll();
+        $articles = $articleRepository->findAllPublishedOrderedByNewest();
+        return $this->render('article/homepage.html.twig', [
+            'articles' => $articles
+        ]);
     }
 
     /**
@@ -37,9 +43,9 @@ class ArticleController extends AbstractController
      * @param $slug
      * @return Response
      */
-    public function show(string $slug, SlackClient $slack, ArticleRepository $articleRepository){
+    public function show(/*string $slug,*/ Article $article, SlackClient $slack, ArticleRepository $articleRepository){
 
-        // Slack Integration!
+        /*// Slack Integration!
         if($slug == 'khaaaaaan'){
             $slack->sendMessage('Khan', 'Hi There!');
         }
@@ -48,6 +54,11 @@ class ArticleController extends AbstractController
 
         if(!$article){
             throw $this->createNotFoundException(sprintf('No article for slug "%s"', $slug));
+        }*/
+
+        // Slack Integration!
+        if($article->getSlug() == 'khaaaaaan'){
+            $slack->sendMessage('Khan', 'Hi There!');
         }
 
         $comments = [
