@@ -67,6 +67,10 @@ EOF
             $article->setPublishedAt(new \DateTime(sprintf('-%d days', rand(1, 100))));
         }
 
+        $article->setAuthor('Mike Ferengi');
+        $article->setHeartCount(rand(5, 100));
+        $article->setImage('asteroid.jpeg');
+
         $this->em->persist($article);
         $this->em->flush();
 
@@ -117,5 +121,16 @@ EOF
 
     private function getOrCreateQueryBuilder(QueryBuilder $qb = null){
         return $qb ?: $this->createQueryBuilder('a');
+    }
+
+    public function setHeartCounter(Article $article){
+        $article->setHeartCount($article->getHeartCount() + 1);
+        $this->em->flush();
+
+        //Simplified
+        //$article->incrementHeartCount();
+        //$this->em->flush();
+
+        return $article->getHeartCount();
     }
 }
