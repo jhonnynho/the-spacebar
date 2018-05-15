@@ -15,6 +15,7 @@ class ArticleAdminController extends AbstractController
      */
     public function new(ArticleRepository $articleRepository)
     {
+        die();
         return $articleRepository->saveArticle();
     }
 }
