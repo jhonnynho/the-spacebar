@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
+use App\Repository\CommentRepository;
 use App\Service\MarkdownHelper;
 use App\Service\SlackClient;
 use Nexy\Slack\Client;
@@ -61,15 +62,8 @@ class ArticleController extends AbstractController
             $slack->sendMessage('Khan', 'Hi There!');
         }
 
-        $comments = [
-            'Curabitur eu venenatis massa. Integer at orci non nisi imperdiet feugiat.',
-            'Duis justo sapien, pharetra ac risus non, fermentum tristique felis.',
-            'Ut tincidunt libero quam, in sodales est lacinia nec.'
-        ];
-
         return $this->render('article/show.html.twig',[
-            'article' => $article,
-            'comments' => $comments
+            'article' => $article
         ]);
     }
 
