@@ -5,10 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
-use App\Repository\CommentRepository;
-use App\Service\MarkdownHelper;
 use App\Service\SlackClient;
-use Nexy\Slack\Client;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,8 +27,8 @@ class ArticleController extends AbstractController
      * @Route("/", name="app_homepage")
      * @return Response
      */
-    public function homepage(ArticleRepository $articleRepository){
-
+    public function homepage(ArticleRepository $articleRepository)
+    {
         $articles = $articleRepository->showAll();
         $articles = $articleRepository->findAllPublishedOrderedByNewest();
         return $this->render('article/homepage.html.twig', [
@@ -41,10 +38,16 @@ class ArticleController extends AbstractController
 
     /**
      * @Route("/news/{slug}", name="article_show")
-     * @param $slug
+     * @param Article $article
+     * @param SlackClient $slack
+     * @param ArticleRepository $articleRepository
      * @return Response
      */
-    public function show(/*string $slug,*/ Article $article, SlackClient $slack, ArticleRepository $articleRepository){
+    public function show(
+        Article $article,
+        SlackClient $slack,
+        ArticleRepository $articleRepository
+    ) {
 
         /*// Slack Integration!
         if($slug == 'khaaaaaan'){
@@ -58,11 +61,11 @@ class ArticleController extends AbstractController
         }*/
 
         // Slack Integration!
-        if($article->getSlug() == 'khaaaaaan'){
+        if ($article->getSlug() == 'khaaaaaan') {
             $slack->sendMessage('Khan', 'Hi There!');
         }
 
-        return $this->render('article/show.html.twig',[
+        return $this->render('article/show.html.twig', [
             'article' => $article
         ]);
     }
@@ -70,8 +73,8 @@ class ArticleController extends AbstractController
     /**
      * @Route("/news/{slug}/heart", name="article_toggle_heart", methods={"POST"})
      */
-    public function toggleArticleHeart(Article $article, LoggerInterface $logger, ArticleRepository $articleRepository){
-
+    public function toggleArticleHeart(Article $article, LoggerInterface $logger, ArticleRepository $articleRepository)
+    {
         $count = $articleRepository->setHeartCounter($article);
 
         $logger->info('Article is being hearted!');

@@ -32,10 +32,10 @@ class ArticleStatsCommand extends Command
             'hearts' => rand(10, 100)
         ];
 
-        switch ($input->getOption('format')){
+        switch ($input->getOption('format')) {
             case 'text':
                 $rows = [];
-                foreach ($data as $key => $value){
+                foreach ($data as $key => $value) {
                     $rows[] = [$key, $value];
                 }
                 $io->table(['Key', 'Value'], $rows);

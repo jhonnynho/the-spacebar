@@ -27,7 +27,7 @@ class ArticleFixtures extends BaseFixture
 
     protected function loadData(ObjectManager $manager)
     {
-        $this->createMany(Article::class, 10, function(Article $article, $count) use ($manager){
+        $this->createMany(Article::class, 10, function (Article $article, $count) use ($manager) {
             $article->setTitle($this->faker->randomElement(self::$articletitles));
             $article->setContent(
                 <<<EOF

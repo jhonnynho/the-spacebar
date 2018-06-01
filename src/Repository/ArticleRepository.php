@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -63,7 +64,7 @@ adipisicing cow cillum tenderloin.
 EOF
         );
         $article->setSlug('test-unique'.rand(100, 999));
-        if(rand(1, 10) > 2){
+        if (rand(1, 10) > 2) {
             $article->setPublishedAt(new \DateTime(sprintf('-%d days', rand(1, 100))));
         }
 
@@ -81,7 +82,8 @@ EOF
         ));
     }
 
-    public function show(string $slug) : ?Article {
+    public function show(string $slug) : ?Article
+    {
         $repository = $this->em->getRepository(Article::class);
 
         /** @var Article $article */
@@ -93,7 +95,8 @@ EOF
     /**
      * @return Article[]
      */
-    public function showAll() {
+    public function showAll()
+    {
         $repository = $this->em->getRepository(Article::class);
         $article = $repository->findby(
             [],
@@ -106,7 +109,9 @@ EOF
     /**
      * @return Article[]
      */
-    public function findAllPublishedOrderedByNewest(){
+    public function findAllPublishedOrderedByNewest()
+    {
+
         return $this->addIsPublishedQueryBuilder()
             ->andWhere('a.publishedAt IS NOT NULL')
             ->orderBy('a.publishedAt', 'DESC')
@@ -114,16 +119,19 @@ EOF
             ->getResult();
     }
 
-    private function addIsPublishedQueryBuilder(QueryBuilder $qb = null){
+    private function addIsPublishedQueryBuilder(QueryBuilder $qb = null)
+    {
         return $this->getOrCreateQueryBuilder($qb)
             ->andWhere('a.publishedAt IS NOT NULL');
     }
 
-    private function getOrCreateQueryBuilder(QueryBuilder $qb = null){
+    private function getOrCreateQueryBuilder(QueryBuilder $qb = null)
+    {
         return $qb ?: $this->createQueryBuilder('a');
     }
 
-    public function setHeartCounter(Article $article){
+    public function setHeartCounter(Article $article)
+    {
         $article->setHeartCount($article->getHeartCount() + 1);
         $this->em->flush();
 
@@ -132,5 +140,13 @@ EOF
         //$this->em->flush();
 
         return $article->getHeartCount();
+    }
+
+    public static function createNonDeletedCriteria(): Criteria
+    {
+        return Criteria::create()
+            ->andWhere(Criteria::expr()->eq('isDeleted', false))
+            ->orderBy(['createdAt' => 'DESC'])
+        ;
     }
 }

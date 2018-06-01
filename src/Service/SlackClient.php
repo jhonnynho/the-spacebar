@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Helper\LoggerTrait;
 use Nexy\Slack\Client;
-use Psr\Log\LoggerInterface;
 
 class SlackClient
 {
